@@ -4,13 +4,38 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>HTML/CSS/JS Boilerplate</title>
+	<title>Near Earth Objects</title>
+	<link href="https://fonts.googleapis.com/css?family=Space+Mono" rel="stylesheet">
 	<link rel="stylesheet" href="./public/styles/style.css">
 </head>
 <body>
 
-	<h1>HTML/CSS/JS Boilerplate</h1>
-	<p>Let's code!</p>
+	<div class="overall-container">
+		<div class="about-page">
+			<p class="about-page-text"></p>
+		</div>
+
+		<div class="slider-container">
+			<div class="year-container">
+				<h1 id="year-title">Year</h1>
+				<input id="yearSlider" type="range" min="0" max="120" step="1" value="2018">
+			</div>
+			
+			<div class="month-container">
+				<h1 id="month-title">Month</h1>
+				<input id="monthSlider" type="range" min="1" max="12" step="1">
+			</div>
+		</div>
+		
+		
+	
+		<div id="container" class="svg-container">
+		</div>
+	</div>
+	
+	<script src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='
+	 crossorigin='anonymous'></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
 
 	<script src="public/scripts/main.js"></script>
 </body>
