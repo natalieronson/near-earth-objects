@@ -41,6 +41,12 @@ h1 {
     left: 20px;
 }
 
+@media (max-width: 450px) {
+  .data-display {
+    font-size: 10px;
+  }
+}
+
 
 .slider-container {
     margin-bottom: 50px;

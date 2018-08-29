@@ -1,6 +1,6 @@
-let url = "https://ssd-api.jpl.nasa.gov/cad.api";
+const url = "https://ssd-api.jpl.nasa.gov/cad.api";
 
-let correspondingMonths = {
+const correspondingMonths = {
     "01": "January",
     "02": "February",
     "03": "March",
@@ -15,69 +15,80 @@ let correspondingMonths = {
     "12": "December"
 }
 
-let ringColour = "#303F42";
 
-let date = new Date();
-let currentMonth = date.getMonth() +1;
-let currentYear = date.getFullYear();
+const ringColour = "#303F42";
+const width = window.innerWidth;
+const circleWidth = width / 2;
+const height = 700;
+const halfHeight = height / 2;
 
+const svgBackground = d3.select("#container")
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .classed("svg-content", true)
+    .on("mouseleave", function () {
+        d3.selectAll("circle.neo")
+            .style("stroke", ringColour);
 
+        d3.select("div#container")
+            .selectAll("p")
+            .remove();
+    })
+
+//getting the current date
+const date = new Date();
+const currentMonth = date.getMonth() +1;
+const currentYear = date.getFullYear();
+
+//setting the initial month title based on the current month
 let monthTitle = document.getElementById("month-title");
 monthTitle.innerHTML = correspondingMonths[transformMonth(currentMonth)];
 
+//setting the initial year title based on the current year
 let yearTitle = document.getElementById("year-title");
 yearTitle.innerHTML = currentYear;
 
-let width = window.innerWidth;
-let circleWidth = width / 2;
-
 let scale = 4000;
 
-
+//attaching the sliders to a variable
 let month = document.getElementById("monthSlider");
-// month.value(currentMonth);
 let year = document.getElementById("yearSlider");
-// year.value(currentYear);
-let monthValue = "01";
-let yearValue = "2018";
+
+//setting the values for the initial API call
+let monthValue = transformMonth(currentMonth);
+let yearValue = currentYear;
 
 
-
+//setting title and API call when month slider is changed
 month.addEventListener("change", function () {
     monthValue = document.getElementById("monthSlider").value;
-    // if (monthValue < 10) {
-    //     monthValue = "0" + monthValue;
-    // }
     monthValue = transformMonth(monthValue);
-    console.log(correspondingMonths[monthValue]);
     monthTitle.innerHTML = correspondingMonths[monthValue];
     neoAPICall(monthValue, yearValue);
 })
 
+//setting title and API call when year slider is changed
 year.addEventListener("change", function () {
     yearValue = `${document.getElementById("yearSlider").value}`;
-    if (yearValue < 100) {
-        yearValue = "19" + yearValue;
-    }
-    else {
-        yearValue = "20" + yearValue[1] + yearValue[2];
-    }
-    console.log(yearValue);
+    yearValue = transformYear(yearValue);
     yearTitle.innerHTML = yearValue;
     neoAPICall(monthValue, yearValue);
 })
 
+
 let timePeriods = [month, year];
 
+//when the slider is released, remove all items from the SVG
+//API call with new values
 timePeriods.forEach(function (item) {
     item.addEventListener("mouseup", function () {
-        console.log("remove me!!")
-        svgBackground.selectAll("*").remove();
-        console.log("added array item")
+        svgBackground.selectAll("circle.neo").remove();
     })
     neoAPICall(monthValue, yearValue);
 })
 
+//type words across the screen
 function typeWords(word) {
     let page = document.getElementsByClassName("about-page-text")[0];
     
@@ -85,7 +96,6 @@ function typeWords(word) {
     let timer = setInterval(function () {
         let wordLength = word.length;
         if (i < wordLength) {
-            console.log(word[i]);
             page.innerHTML += word[i];
         }
         else {
@@ -97,11 +107,7 @@ function typeWords(word) {
 }
 
 
-
-
-typeWords("Every day comets and asteroids pass near our planet. How close were they?");
-
-
+//change the month format for API call
 function transformMonth (month) {
     if (month < 10) {
         month= "0" + month;
@@ -112,46 +118,53 @@ function transformMonth (month) {
     }
 }
 
+//change the year format for API call
+function transformYear (year) {
+    if (year < 10) {
+        year = "190" + year;
+    }
+    else if (year > 10 && year < 100) {
+        year = "19" + year;
+    }
+    else {
+        year = "20" + year[1] + year[2];
+    }
 
+    return year; 
+}
+
+//API call
 function neoAPICall(month, year) {
-    
-
-    console.log ("inside")
-    console.log(month);
-    console.log(year);
-
     $.ajax({
         url: url,
         dataType: "json",
         method: "GET",
         data: {
-            // "date-min": `${yearValue}-${monthValue}-01`,
-            // "date-max": `${yearValue}-${monthValue}-31`
             "date-min": `${year}-${month}-01`,
             "date-max": `${year}-${month}-31`,
             "fullname": true
-            
         }
     }).then(function (res) {
         parseAPIdata(res.data);
-        console.log(res)
     });
-
 }
 
+//parsing through API data
 function parseAPIdata(items) {
     let objectDistance;
 
+    //getting distance from response
     if (items) {
             objectDistance = items.map(item => {
             return item[4];
         });
     
+    //changing scale
         objectDistance = objectDistance.map(item => {
-            // return item * 1496;
             return item * scale;
         });
     }
+    //if there's no response, set as an empty array
     else {
         objectDistance = [];
     }
@@ -172,20 +185,25 @@ function addCirclesToSVG(radius) {
             .enter()
             .append("circle")
             .attr("class", "neo")
+            //actions when you mouseover a ring
             .on("mouseover", function (d) { console.log(d);
                 let distance = d / scale; 
 
+                //remove the highlight from the previous circle
                 d3.selectAll("circle.neo")
                 .style("stroke", ringColour);
 
+                //add highlight to selected circle
                 d3.select(this)
                     .style("stroke", "#F2583E");
 
-                d3.select("div#container")
+                //remove the distance from the previous circle
+                d3.select("#container")
                 .selectAll("p")
                 .remove();
 
-                d3.select("div#container")
+                //display distance of selected circle
+                d3.select("#container")
                 .append("p")
                 .text(distance + " au")
                 .attr("class", "data-display")
@@ -194,46 +212,22 @@ function addCirclesToSVG(radius) {
     
         let circleAttributes = circles
             .attr("cx", circleWidth)
-            .attr("cy", 250)
+            .attr("cy", halfHeight)
             .attr("r", function (d) { return d })
             .style("stroke", ringColour)
             .style("fill", "none")
-
-        
-
-      
-        
+  
     }
 
-    generateStars(1, 20);
-    generateStars(0.5, 100);
-    svgBackground.append("circle").attr("cx", circleWidth).attr("cy", 250).attr("r", 5).style("fill", "#0077be");
+    svgBackground.append("circle").attr("cx", circleWidth).attr("cy", halfHeight).attr("r", 5).style("fill", "#0077be");
 }
-
-
-
-
-
-let svgBackground = d3.select("div#container")
-    .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", `0 0 ${width} 500`)
-    .classed("svg-content", true)
-    .on("mouseleave", function () {
-        d3.selectAll("circle.neo")
-            .style("stroke", ringColour);
-
-        d3.select("div#container")
-            .selectAll("p")
-            .remove();
-
-    })
 
 
 function generateStars (size, number) {
     let starCoords = [];
     let maxX = window.innerWidth;
-    let maxY = 500;
+    console.log('star maxX' + maxX);
+    let maxY = height;
     let min = 0;
 
     for (let i = 0; i < number; i++) {
@@ -260,6 +254,7 @@ function setUpSVG () {
     generateStars(1, 20);
     generateStars(0.5, 100);
     neoAPICall(monthValue, yearValue);
+    typeWords("Every day comets and asteroids pass near our planet. How close were they?");
 }
 
 setUpSVG();
