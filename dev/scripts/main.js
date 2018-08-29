@@ -188,6 +188,8 @@ function addCirclesToSVG(radius) {
             //actions when you mouseover a ring
             .on("mouseover", function (d) { console.log(d);
                 let distance = d / scale; 
+                distance = distance * 149598000;
+                distance = distance.toFixed(2);
 
                 //remove the highlight from the previous circle
                 d3.selectAll("circle.neo")
@@ -205,7 +207,7 @@ function addCirclesToSVG(radius) {
                 //display distance of selected circle
                 d3.select("#container")
                 .append("p")
-                .text(distance + " au")
+                .text(distance + " km")
                 .attr("class", "data-display")
                })
            

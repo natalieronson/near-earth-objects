@@ -169,6 +169,8 @@ function addCirclesToSVG(radius) {
         .on("mouseover", function (d) {
             console.log(d);
             var distance = d / scale;
+            distance = distance * 149598000;
+            distance = distance.toFixed(2);
 
             //remove the highlight from the previous circle
             d3.selectAll("circle.neo").style("stroke", ringColour);
@@ -180,7 +182,7 @@ function addCirclesToSVG(radius) {
             d3.select("#container").selectAll("p").remove();
 
             //display distance of selected circle
-            d3.select("#container").append("p").text(distance + " au").attr("class", "data-display");
+            d3.select("#container").append("p").text(distance + " km").attr("class", "data-display");
         });
 
         var circleAttributes = circles.attr("cx", circleWidth).attr("cy", halfHeight).attr("r", function (d) {
