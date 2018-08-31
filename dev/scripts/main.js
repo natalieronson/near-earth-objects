@@ -130,7 +130,14 @@ function transformYear (year) {
         year = "20" + year[1] + year[2];
     }
 
+    console.log(year);
     return year; 
+
+    // let year = Number.parseInt(year);
+    // year = year + 1900; 
+    // year = year + '';
+
+    // return year; 
 }
 
 //API call
@@ -186,8 +193,8 @@ function addCirclesToSVG(radius) {
             .append("circle")
             .attr("class", "neo")
             //actions when you mouseover a ring
-            .on("mouseover", function (d) { 
-                let distance = d / scale; 
+            .on("mouseover", function (distanceUnscaled) { 
+                let distance = distanceUnscaled / scale; 
                 distance = distance * 149598000;
                 distance = distance.toFixed(2);
 
@@ -215,7 +222,7 @@ function addCirclesToSVG(radius) {
         let circleAttributes = circles
             .attr("cx", circleWidth)
             .attr("cy", halfHeight)
-            .attr("r", function (d) { return d })
+            .attr("r", function (length) { return length })
             .style("stroke", ringColour)
             .style("fill", "none")
   
@@ -224,8 +231,12 @@ function addCirclesToSVG(radius) {
     svgBackground.append("circle").attr("cx", circleWidth).attr("cy", halfHeight).attr("r", 5).style("fill", "#0077be");
 }
 
+function range(min, max) {
+    let num = Math.floor(Math.random() * (max - min) + min);
+    return num;
+}
 
-function generateStars (size, number) {
+function getStarCoords(number) {
     let starCoords = [];
     let maxX = window.innerWidth;
     let maxY = height;
@@ -233,22 +244,31 @@ function generateStars (size, number) {
 
     for (let i = 0; i < number; i++) {
 
-        let numX = Math.floor(Math.random() * (maxX - min) + min);
-        let numY = Math.floor(Math.random() * (maxY - min) + min);
+        let numX = range(min, maxX);
+        let numY = range(min, maxY);
         let num = { X: numX, Y: numY }
         starCoords.push(num);
     }
+    return starCoords;
+}
 
-    let stars = svgBackground.selectAll("circle.star")
+function drawStars(starCoords, size) {
+        svgBackground.selectAll("circle.star")
         .data(starCoords)
         .enter()
         .append("circle")
-        .attr("cx", function (d) { return d.X })
-        .attr("cy", function (d) { return d.Y })
+        .attr("cx", function (point) { return point.X })
+        .attr("cy", function (point) { return point.Y })
         .attr("r", size)
         .attr("class", "star")
         .style("fill", "white")
         .style("stroke", "white")
+}
+
+
+function generateStars (size, number) {
+    let stars = getStarCoords(number);
+    drawStars(stars, size);
 }
 
 function setUpSVG () {
