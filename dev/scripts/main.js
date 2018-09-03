@@ -38,7 +38,7 @@ const svgBackground = d3.select("#container")
 
 //getting the current date
 const date = new Date();
-const currentMonth = date.getMonth() +1;
+const currentMonth = date.getMonth() + 1;
 const currentYear = date.getFullYear();
 
 //setting the initial month title based on the current month
@@ -91,7 +91,7 @@ timePeriods.forEach(function (item) {
 //type words across the screen
 function typeWords(word) {
     let page = document.getElementsByClassName("about-page-text")[0];
-    
+
     let i = 0;
     let timer = setInterval(function () {
         let wordLength = word.length;
@@ -108,9 +108,9 @@ function typeWords(word) {
 
 
 //change the month format for API call
-function transformMonth (month) {
+function transformMonth(month) {
     if (month < 10) {
-        month= "0" + month;
+        month = "0" + month;
         return month;
     }
     else {
@@ -119,7 +119,7 @@ function transformMonth (month) {
 }
 
 //change the year format for API call
-function transformYear (year) {
+function transformYear(year) {
     if (year < 10) {
         year = "190" + year;
     }
@@ -130,7 +130,7 @@ function transformYear (year) {
         year = "20" + year[1] + year[2];
     }
 
-    return year; 
+    return year;
 }
 
 //API call
@@ -155,11 +155,11 @@ function parseAPIdata(items) {
 
     //getting distance from response
     if (items) {
-            objectDistance = items.map(item => {
+        objectDistance = items.map(item => {
             return item[4];
         });
-    
-    //changing scale
+
+        //changing scale
         objectDistance = objectDistance.map(item => {
             return item * scale;
         });
@@ -168,7 +168,7 @@ function parseAPIdata(items) {
     else {
         objectDistance = [];
     }
-    
+
     addCirclesToSVG(objectDistance);
 
 }
@@ -186,14 +186,14 @@ function addCirclesToSVG(radius) {
             .append("circle")
             .attr("class", "neo")
             //actions when you mouseover a ring
-            .on("mouseover", function (d) { 
-                let distance = d / scale; 
+            .on("mouseover", function (d) {
+                let distance = d / scale;
                 distance = distance * 149598000;
                 distance = distance.toFixed(2);
 
                 //remove the highlight from the previous circle
                 d3.selectAll("circle.neo")
-                .style("stroke", ringColour);
+                    .style("stroke", ringColour);
 
                 //add highlight to selected circle
                 d3.select(this)
@@ -201,31 +201,31 @@ function addCirclesToSVG(radius) {
 
                 //remove the distance from the previous circle
                 d3.select("#container")
-                .selectAll("p")
-                .remove();
+                    .selectAll("p")
+                    .remove();
 
                 //display distance of selected circle
                 d3.select("#container")
-                .append("p")
-                .text(distance + " km")
-                .attr("class", "data-display")
-               })
-           
-    
+                    .append("p")
+                    .text(distance + " km")
+                    .attr("class", "data-display")
+            })
+
+
         let circleAttributes = circles
             .attr("cx", circleWidth)
             .attr("cy", halfHeight)
             .attr("r", function (d) { return d })
             .style("stroke", ringColour)
             .style("fill", "none")
-  
+
     }
 
     svgBackground.append("circle").attr("cx", circleWidth).attr("cy", halfHeight).attr("r", 5).style("fill", "#0077be");
 }
 
 
-function generateStars (size, number) {
+function generateStars(size, number) {
     let starCoords = [];
     let maxX = window.innerWidth;
     let maxY = height;
@@ -251,11 +251,11 @@ function generateStars (size, number) {
         .style("stroke", "white")
 }
 
-function setUpSVG () {
+function setUpSVG() {
     generateStars(1, 20);
     generateStars(0.5, 100);
     neoAPICall(monthValue, yearValue);
-    typeWords("Every day comets and asteroids pass near our planet. How close were they?");
+    typeWords("EVERY DAY comets and asteroids pass near our planet. How close were they?");
 }
 
 setUpSVG();

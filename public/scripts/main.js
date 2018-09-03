@@ -217,7 +217,7 @@ function setUpSVG() {
     generateStars(1, 20);
     generateStars(0.5, 100);
     neoAPICall(monthValue, yearValue);
-    typeWords("Every day comets and asteroids pass near our planet. How close were they?");
+    typeWords("EVERY DAY comets and asteroids pass near our planet. How close were they?");
 }
 
 setUpSVG();
