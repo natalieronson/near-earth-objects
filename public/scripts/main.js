@@ -19,15 +19,23 @@ var correspondingMonths = {
 
 var ringColour = "#303F42";
 var width = window.innerWidth;
+console.log(width);
 var circleWidth = width / 2;
-var height = 700;
-var halfHeight = height / 2;
+// let h = window.innerHeight;
+var h = 700;
+// console.log("h is " + h);
 
-var svgBackground = d3.select("#container").append("svg").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 " + width + " " + height).classed("svg-content", true).on("mouseleave", function () {
+var svgBackground = d3.select("#container").append("svg")
+// .attr("preserveAspectRatio", "xMinYMin meet")
+.attr("viewBox", "0 0 " + width + " " + h).classed("svg-content", true).on("mouseleave", function () {
     d3.selectAll("circle.neo").style("stroke", ringColour);
 
     d3.select("div#container").selectAll("p").remove();
 });
+
+var height = 700;
+var halfHeight = height / 2;
+console.log(height);
 
 //getting the current date
 var date = new Date();
@@ -43,6 +51,14 @@ var yearTitle = document.getElementById("year-title");
 yearTitle.innerHTML = currentYear;
 
 var scale = 4000;
+
+if (width < 500) {
+    scale = 3000;
+}
+
+if (width < 350) {
+    scale = 2000;
+}
 
 //attaching the sliders to a variable
 var month = document.getElementById("monthSlider");
@@ -217,7 +233,7 @@ function setUpSVG() {
     generateStars(1, 20);
     generateStars(0.5, 100);
     neoAPICall(monthValue, yearValue);
-    typeWords("EVERY DAY comets and asteroids pass near our planet. How close were they?");
+    typeWords("Every day comets and asteroids pass near our planet. How close were they?");
 }
 
 setUpSVG();

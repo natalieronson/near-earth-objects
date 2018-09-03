@@ -15,17 +15,18 @@ const correspondingMonths = {
     "12": "December"
 }
 
-
 const ringColour = "#303F42";
 const width = window.innerWidth;
+console.log(width);
 const circleWidth = width / 2;
-const height = 700;
-const halfHeight = height / 2;
+// let h = window.innerHeight;
+let h = 700;
+// console.log("h is " + h);
 
 const svgBackground = d3.select("#container")
     .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", `0 0 ${width} ${height}`)
+    // .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", `0 0 ${width} ${h}`)
     .classed("svg-content", true)
     .on("mouseleave", function () {
         d3.selectAll("circle.neo")
@@ -35,6 +36,18 @@ const svgBackground = d3.select("#container")
             .selectAll("p")
             .remove();
     })
+
+
+
+let height = 700;
+const halfHeight = height / 2;
+console.log(height);
+
+
+
+
+
+
 
 //getting the current date
 const date = new Date();
@@ -50,6 +63,16 @@ let yearTitle = document.getElementById("year-title");
 yearTitle.innerHTML = currentYear;
 
 let scale = 4000;
+
+if (width < 500) {
+    scale = 3000;
+}
+
+if (width < 350) {
+    scale = 2000;
+}
+
+
 
 //attaching the sliders to a variable
 let month = document.getElementById("monthSlider");
@@ -255,21 +278,7 @@ function setUpSVG() {
     generateStars(1, 20);
     generateStars(0.5, 100);
     neoAPICall(monthValue, yearValue);
-    typeWords("EVERY DAY comets and asteroids pass near our planet. How close were they?");
+    typeWords("Every day comets and asteroids pass near our planet. How close were they?");
 }
 
 setUpSVG();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
