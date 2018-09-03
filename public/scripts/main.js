@@ -167,7 +167,6 @@ function addCirclesToSVG(radius) {
         .enter().append("circle").attr("class", "neo")
         //actions when you mouseover a ring
         .on("mouseover", function (d) {
-            console.log(d);
             var distance = d / scale;
             distance = distance * 149598000;
             distance = distance.toFixed(2);
@@ -196,7 +195,6 @@ function addCirclesToSVG(radius) {
 function generateStars(size, number) {
     var starCoords = [];
     var maxX = window.innerWidth;
-    console.log('star maxX' + maxX);
     var maxY = height;
     var min = 0;
 
